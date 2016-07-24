@@ -74,8 +74,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
     // Convenience finder methods for HQL strings
     //-------------------------------------------------------------------------
 
-
-    protected class QueryParam {
+    private class QueryParam {
         private List<String> paramNames;
         private List<Object> values;
 
@@ -110,7 +109,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
         }
     }
 
-    protected QueryParam create(Map<String, Object> paramsMap) {
+    private QueryParam create(Map<String, Object> paramsMap) {
         QueryParam queryParam = new QueryParam();
 
         if (paramsMap != null && !paramsMap.isEmpty()) {
@@ -124,7 +123,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
                         values.add(param.getValue());
                     });
 
-            if (!paramNames.isEmpty()){
+            if (!paramNames.isEmpty()) {
                 queryParam.setParamNames(paramNames);
                 queryParam.setValues(values);
             }
@@ -132,10 +131,31 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
         return queryParam;
     }
 
-    protected List<?> findByNamedParam(String hqlString, Map<String, Object> paramsMap) {
-        QueryParam queryParam = create(paramsMap);
-        return this.getHibernateTemplate().findByNamedParam(hqlString,
+    private QueryParam create(Object... params) {
+        QueryParam queryParam = new QueryParam();
+
+        if (params != null && params.length > 0) {
+            List<String> paramNames = new ArrayList<>();
+            List<Object> values = new ArrayList<>();
+
+            for (int i = 0; i < params.length; i++) {
+                paramNames.add(String.valueOf(i + 1));
+                values.add(params[i]);
+            }
+
+            if (!paramNames.isEmpty()) {
+                queryParam.setParamNames(paramNames);
+                queryParam.setValues(values);
+            }
+        }
+        return queryParam;
+    }
+
+    private <T> List<T> findByNamedParam(String hqlString, QueryParam queryParam) {
+        @SuppressWarnings("unchecked")
+        List<T> list = (List<T>) this.getHibernateTemplate().findByNamedParam(hqlString,
                 queryParam.getParamNamesArr(), queryParam.getValuesArr());
+        return list;
     }
 
     /**
@@ -145,28 +165,11 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
      * @param params 待设置的参数
      * @since chenxianguan 2015年12月3日下午4:38:49
      */
-    protected void setParams(org.hibernate.Query query, Object... params) {
+    private void setParams(org.hibernate.Query query, Object... params) {
         if (params != null) {
             for (int i = 0; i < params.length; i++) {
                 query.setParameter(i, params[i]);
             }
-        }
-    }
-
-    /**
-     * 设置Query的参数：JPA模式，从1开始
-     *
-     * @param query  org.hibernate.Query
-     * @param params 待设置的参数
-     * @since chenxianguan 2016年6月22日
-     */
-    protected void setParamsJPA(org.hibernate.Query query, Object... params) {
-        if (params != null) {
-            Map<String, Object> paramsMap = new HashMap<>(params.length);
-            for (int i = 0; i < params.length; i++) {
-                paramsMap.put(String.valueOf(i + 1), params[i]);
-            }
-            this.setParams(query, paramsMap);
         }
     }
 
@@ -177,7 +180,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
      * @param paramsMap 待设置的参数对
      * @since chenxianguan 2015年12月3日下午4:38:52
      */
-    protected void setParams(org.hibernate.Query query, Map<String, Object> paramsMap) {
+    private void setParams(org.hibernate.Query query, Map<String, Object> paramsMap) {
         if (paramsMap == null || paramsMap.isEmpty()) {
             return;
         }
@@ -195,21 +198,6 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
                 query.setParameter(key, value);
             }
         }
-    }
-
-
-
-    @Override
-    public <T> List<T> findByJPA(String hqlString, Object... params) {
-        org.hibernate.Query query = this.currentSession().createQuery(hqlString);
-        this.setParamsJPA(query, params);
-        return query.list();
-    }
-
-    @Override
-    public <T> T findSingleByJPA(String hqlString, Object... params) throws HibernateException {
-        List<T> list = findByJPA(hqlString, params);
-        return dealWithSingle(list);
     }
 
     /**
@@ -233,8 +221,18 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
 
 
     @Override
+    public <T> T findSingleByJPA(String hqlString, Object... params) throws HibernateException {
+        return dealWithSingle(findByJPA(hqlString, params));
+    }
+
+    @Override
+    public <T> List<T> findByJPA(String hqlString, Object... params) {
+        return findByNamedParam(hqlString, create(params));
+    }
+
+    @Override
     public <T> List<T> findByHql(String hqlString, Map<String, Object> paramsMap) {
-        return findByHql(hqlString, paramsMap, null, null);
+        return findByNamedParam(hqlString, create(paramsMap));
     }
 
     @SuppressWarnings("unchecked")
@@ -243,7 +241,6 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
                                  Integer firstResult, Integer maxResults) {
         org.hibernate.Query query = this.currentSession().createQuery(hqlString);
         this.setParams(query, paramsMap);
-
         if (firstResult != null) {
             query.setFirstResult(firstResult);
         }
@@ -329,102 +326,68 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
         return getHibernateTemplate().bulkUpdate(queryString, values);
     }
 
-    @Override
-    public int bulkUpdateByJPA(String queryString, Object... values) {
-        org.hibernate.Query query = this.currentSession().createQuery(queryString);
-        this.setParamsJPA(query, values);
-
-        return query.executeUpdate();
-    }
-
-    @Override
-    public int bulkUpdateByMap(String queryString, Map<String, Object> paramsMap) {
-        org.hibernate.Query query = this.currentSession().createQuery(queryString);
-        this.setParams(query, paramsMap);
-
-        return query.executeUpdate();
-    }
-
-
     //-------------------------------------------------------------------------
     // Convenience finder methods for SQL strings
     //-------------------------------------------------------------------------
 
+    @Override
+    public int executeUpdateBySql(String sql, Object... params) {
+        SQLQuery queryObject = this.currentSession().createSQLQuery(sql);
+        setParams(queryObject, params);
+        return queryObject.executeUpdate();
+    }
 
     @Override
-    public int executeUpdateBySQL(String sql, Object... params) {
-        SQLQuery query = this.currentSession().createSQLQuery(sql);
-        this.setParams(query, params);
-
-        return query.executeUpdate();
+    public int executeUpdateBySql(String sql, Map<String, Object> paramsMap) {
+        SQLQuery queryObject = this.currentSession().createSQLQuery(sql);
+        setParams(queryObject, paramsMap);
+        return queryObject.executeUpdate();
     }
 
 
     @Override
-    public int executeUpdateBySQL(String sql, Map<String, Object> paramsMap) {
-        SQLQuery query = this.currentSession().createSQLQuery(sql);
-        this.setParams(query, paramsMap);
-
-        return query.executeUpdate();
-    }
-
-
-
-    @Override
-    public List queryObjectsSql(String sql, Object[] params) {
-
-        return this.queryObjectsBySql(null, sql, params);
+    public List findBySql(String sql, Object... params) {
+        return this.findBySql(null, sql, params);
     }
 
     @Override
-    public List queryObjectsSql(String sql, Map<String, Object> paramsMap) {
-
-        return this.queryObjectsBySql(null, sql, paramsMap, null, null);
+    public List findBySql(String sql, Map<String, Object> paramsMap) {
+        return this.findBySql(null, sql, paramsMap, null, null);
     }
 
     @Override
-    public List queryObjectsBySql(String sql, Map<String, Object> paramsMap,
-                                  Integer firstResult, Integer maxResults) {
-
-        return this.queryObjectsBySql(null, sql, paramsMap, firstResult, maxResults);
+    public List findBySql(String sql, Map<String, Object> paramsMap, Integer firstResult, Integer maxResults) {
+        return this.findBySql(null, sql, paramsMap, firstResult, maxResults);
     }
 
-
     @Override
-    public List queryObjectsBySql(Class clazz, String sql, Object[] params) {
-
+    public List findBySql(Class clazz, String sql, Object[] params) {
         SQLQuery query = this.currentSession().createSQLQuery(sql);
         if (clazz != null) {
             query.addEntity(clazz);
         }
         this.setParams(query, params);
-
         return query.list();
     }
 
     @Override
-    public List queryObjectsBySql(Class clazz, String sql, Map<String, Object> paramsMap) {
-
-        return this.queryObjectsBySql(clazz, sql, paramsMap, null, null);
+    public List findBySql(Class clazz, String sql, Map<String, Object> paramsMap) {
+        return this.findBySql(clazz, sql, paramsMap, null, null);
     }
 
     @Override
-    public List queryObjectsBySql(Class clazz, String sql,
-                                  Map<String, Object> paramsMap, Integer firstResult, Integer maxResults) {
-
+    public List findBySql(Class clazz, String sql, Map<String, Object> paramsMap, Integer firstResult, Integer maxResults) {
         SQLQuery query = this.currentSession().createSQLQuery(sql);
         if (clazz != null) {
             query.addEntity(clazz);
         }
         this.setParams(query, paramsMap);
-
         if (firstResult != null) {
             query.setFirstResult(firstResult);
         }
         if (maxResults != null) {
             query.setMaxResults(maxResults);
         }
-
         return query.list();
     }
 

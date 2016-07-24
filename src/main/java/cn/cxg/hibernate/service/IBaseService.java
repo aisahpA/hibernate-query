@@ -81,7 +81,7 @@ public interface IBaseService {
      * @return 唯一的一个结果 or null
      * @throws HibernateException 当查询到多个结果时抛出异常
      */
-    <T> T findSingleByHqlJPA(String hqlString, Object... params) throws HibernateException;
+    <T> T findSingleByJPA(String hqlString, Object... params) throws HibernateException;
 
     /**
      * 查询多个结果的 HQL query, binding a number of values to "?1" parameters
@@ -91,7 +91,7 @@ public interface IBaseService {
      * @param <T>       result type
      * @return 查询结果，list不会为空
      */
-    <T> List<T> findByHqlJPA(String hqlString, Object... params);
+    <T> List<T> findByJPA(String hqlString, Object... params);
 
     /**
      * 通过hql 查询语句查找对象
@@ -100,7 +100,7 @@ public interface IBaseService {
      * @param paramsMap 命名参数名称及对应的值
      * @return 查询结果，list不会为空
      */
-    <T> List<T> findByHqlMap(String hqlString, Map<String, Object> paramsMap);
+    <T> List<T> findByHql(String hqlString, Map<String, Object> paramsMap);
 
     /**
      * 根据hql分页查询
@@ -112,32 +112,19 @@ public interface IBaseService {
      */
     Page search(String hqlString, Map<String, Object> paramsMap, Page page);
 
-    /**
-     * 同bulkUpdate方法，只是它有事务
-     * Update/delete all objects according to the given query, binding a number of
-     * values to "?" parameters in the query string.
-     *
-     * @param hqlString an update/delete query expressed in Hibernate's query language
-     * @param values    the values of the parameters
-     * @return 更新或删除的记录数量
-     */
-    int updateBulk(String hqlString, Object... values);
-
-    /**
-     * Update/delete all objects according to the given query, binding a number of
-     * values to ":" parameters in the query string.
-     *
-     * @param hqlString an update/delete query expressed in Hibernate's query language
-     * @param paramsMap 字符串指定参数以及对应值集合
-     * @return the number of instances updated/deleted
-     * @since create chenxianguan 2016年1月14日 下午7:30:42
-     */
-    int updateBulkByMap(String hqlString, Map<String, Object> paramsMap);
-
 
     //-------------------------------------------------------------------------
     // 使用Query进行操作
     //-------------------------------------------------------------------------
+
+    /**
+     * 查询记录数量
+     *
+     * @param query 查询条件
+     * @return 记录数量
+     * @since create chenxianguan 2015年11月22日 上午3:39:01
+     */
+    int count(Query query);
 
     /**
      * 直接query查询
@@ -156,45 +143,20 @@ public interface IBaseService {
      */
     <T> Page<T> search(Query query, Page<T> page);
 
-    /**
-     * 查询记录数量
-     *
-     * @param query 查询条件
-     * @return 记录数量
-     * @since create chenxianguan 2015年11月22日 上午3:39:01
-     */
-    int count(Query query);
-
 
     //-------------------------------------------------------------------------
-    // 使用SQL操作
+    // Convenience query methods for iteration and bulk updates/deletes
     //-------------------------------------------------------------------------
 
     /**
-     * 根据sql查找List
+     * 同bulkUpdate方法，只是它有事务
+     * Update/delete all objects according to the given query, binding a number of
+     * values to "?" parameters in the query string.
      *
-     * @param sql sql语句
-     * @return 查询结果集合
+     * @param hqlString an update/delete query expressed in Hibernate's query language
+     * @param values    the values of the parameters
+     * @return 更新或删除的记录数量
      */
-    List findBySqlJPA(String sql);
-
-    /**
-     * 根据sql更新
-     *
-     * @param sql    待执行的sql语句
-     * @param params 按sql语句中问号顺序添加的参数
-     * @return The number of entities updated or deleted.
-     */
-    int updateBySqlJPA(String sql, Object... params);
-
-    /**
-     * 执行SQL 使用:name占位符
-     *
-     * @param sql   sql语句
-     * @param param name以及对于的参数值
-     * @return The number of entities updated or deleted.
-     */
-    int updateBySqlMap(String sql, Map<String, Object> param);
-
+    int updateBulk(String hqlString, Object... values);
 
 }

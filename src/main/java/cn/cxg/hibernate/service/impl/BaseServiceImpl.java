@@ -52,19 +52,18 @@ public class BaseServiceImpl implements IBaseService {
     }
 
 
-
     @Override
-    public <T> T findSingleByHqlJPA(String hqlString, Object... params) throws HibernateException {
+    public <T> T findSingleByJPA(String hqlString, Object... params) throws HibernateException {
         return baseDao.findSingleByJPA(hqlString, params);
     }
 
     @Override
-    public <T> List<T> findByHqlJPA(String hqlString, Object... params) {
+    public <T> List<T> findByJPA(String hqlString, Object... params) {
         return baseDao.findByJPA(hqlString, params);
     }
 
     @Override
-    public <T> List<T> findByHqlMap(String hqlString, Map<String, Object> paramsMap) {
+    public <T> List<T> findByHql(String hqlString, Map<String, Object> paramsMap) {
         return baseDao.findByHql(hqlString, paramsMap);
     }
 
@@ -73,17 +72,11 @@ public class BaseServiceImpl implements IBaseService {
         return baseDao.search(hqlString, paramsMap, page);
     }
 
-    @Override
-    public int updateBulk(String queryString, Object... values) {
-        return baseDao.bulkUpdate(queryString, values);
-    }
 
     @Override
-    public int updateBulkByMap(String queryString, Map<String, Object> paramsMap) {
-        return baseDao.bulkUpdateByMap(queryString, paramsMap);
+    public int count(Query query) {
+        return baseDao.count(query);
     }
-
-
 
     @Override
     public <T> List<T> search(Query query) {
@@ -95,26 +88,10 @@ public class BaseServiceImpl implements IBaseService {
         return baseDao.search(query, page);
     }
 
-    @Override
-    public int count(Query query) {
-        return baseDao.count(query);
-    }
-
-
 
     @Override
-    public List findBySqlJPA(String sql) {
-        return baseDao.queryObjectsSql(sql);
-    }
-
-    @Override
-    public int updateBySqlJPA(String sql, Object... params) {
-        return baseDao.executeUpdateBySQL(sql, params);
-    }
-
-    @Override
-    public int updateBySqlMap(String sql, Map<String, Object> param) {
-        return baseDao.executeUpdateBySQL(sql, param);
+    public int updateBulk(String queryString, Object... values) {
+        return baseDao.bulkUpdate(queryString, values);
     }
 
 }

@@ -3,9 +3,7 @@ package cn.cxg.hibernate.dao;
 import cn.cxg.hibernate.domain.IDomainObject;
 import cn.cxg.hibernate.query.Page;
 import cn.cxg.hibernate.query.Query;
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
-import org.hibernate.criterion.DetachedCriteria;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -94,9 +92,10 @@ public interface IBaseDao {
      * @param hqlString The HQL query, ?num based from 1
      * @param params    按HQL中?num值对应的各参数值，即第一个参数对应?1，第二个对应?2，以此类推
      * @param <T>       result type
-     * @return a {@link List} containing the results of the query execution
+     * @return the single result or null
+     * @throws HibernateException if there is more than one matching result
      */
-    <T> List<T> findByJPA(String hqlString, Object... params);
+    <T> T findSingleByJPA(String hqlString, Object... params) throws HibernateException;
 
     /**
      * Execute an HQL query, binding a number of values to "?1" parameters
@@ -104,10 +103,9 @@ public interface IBaseDao {
      * @param hqlString The HQL query, ?num based from 1
      * @param params    按HQL中?num值对应的各参数值，即第一个参数对应?1，第二个对应?2，以此类推
      * @param <T>       result type
-     * @return the single result or null
-     * @throws HibernateException if there is more than one matching result
+     * @return a {@link List} containing the results of the query execution
      */
-    <T> T findSingleByJPA(String hqlString, Object... params) throws HibernateException;
+    <T> List<T> findByJPA(String hqlString, Object... params);
 
     /**
      * Execute an HQL query, binding a number of values to ":" named
@@ -127,8 +125,7 @@ public interface IBaseDao {
      * @param maxResults  the maximum number of result objects to retrieve (or <=0 for no limit)
      * @return a {@link List} containing the results of the query execution
      */
-    <T> List<T> findByHql(String hqlString, Map<String, Object> paramsMap,
-                          Integer firstResult, Integer maxResults);
+    <T> List<T> findByHql(String hqlString, Map<String, Object> paramsMap, Integer firstResult, Integer maxResults);
 
     /**
      * 根据hql分页查询
@@ -157,7 +154,7 @@ public interface IBaseDao {
      * 普通的查询
      *
      * @param query 查询条件
-     * @return
+     * @return 查询结果
      */
     <T> List<T> search(Query query);
 
@@ -165,9 +162,9 @@ public interface IBaseDao {
      * 分页查询
      * <p>当page为null时，查询所有数据
      *
-     * @param query
-     * @param page
-     * @return
+     * @param query 查询条件
+     * @param page  分页信息
+     * @return 分页数据
      */
     <T> Page<T> search(Query query, Page<T> page);
 
@@ -183,31 +180,8 @@ public interface IBaseDao {
      * @param queryString an update/delete query expressed in Hibernate's query language
      * @param values      the values of the parameters
      * @return the number of instances updated/deleted
-     * @see org.springframework.orm.hibernate4.HibernateTemplate#bulkUpdate(String, Object...)
      */
     int bulkUpdate(String queryString, Object... values);
-
-    /**
-     * Update/delete all objects according to the given query, binding a number of
-     * values to "?num" parameters in the query string.
-     *
-     * @param queryString an update/delete query expressed in Hibernate's query language， ?num based from 1
-     * @param values      the values of the parameters 第一个参数对应?1，第二个对应?2，以此类推
-     * @return the number of instances updated/deleted
-     */
-    int bulkUpdateByJPA(String queryString, Object... values);
-
-    /**
-     * Update/delete all objects according to the given query, binding a number of
-     * values to ":" parameters in the query string.
-     *
-     * @param queryString an update/delete query expressed in Hibernate's query language
-     * @param paramsMap   字符串指定参数以及对应值集合
-     * @return the number of instances updated/deleted
-     * @since create chenxianguan 2016年1月14日 下午7:30:42
-     */
-    int bulkUpdateByMap(String queryString, Map<String, Object> paramsMap);
-
 
     //-------------------------------------------------------------------------
     // Convenience finder methods for SQL strings
@@ -222,7 +196,7 @@ public interface IBaseDao {
      * @see org.hibernate.Query#executeUpdate()
      * @see org.hibernate.Query#setParameter(int, Object)
      */
-    int executeUpdateBySQL(String sql, Object... params);
+    int executeUpdateBySql(String sql, Object... params);
 
     /**
      * 执行带参数的sql(update or delete)
@@ -233,7 +207,7 @@ public interface IBaseDao {
      * @see org.hibernate.Query#executeUpdate()
      * @see org.hibernate.Query#setParameter(String, Object)
      */
-    int executeUpdateBySQL(String sql, Map<String, Object> paramsMap);
+    int executeUpdateBySql(String sql, Map<String, Object> paramsMap);
 
 
     /**
@@ -243,11 +217,11 @@ public interface IBaseDao {
      * @return 查询结果
      * create chenxianguan 2015年12月3日下午8:28:33
      */
-    List queryObjectsSql(String sql, Object... params);
+    List findBySql(String sql, Object... params);
 
-    List queryObjectsSql(String sql, Map<String, Object> paramsMap);
+    List findBySql(String sql, Map<String, Object> paramsMap);
 
-    List queryObjectsBySql(String sql, Map<String, Object> paramsMap, Integer firstResult, Integer maxResults);
+    List findBySql(String sql, Map<String, Object> paramsMap, Integer firstResult, Integer maxResults);
 
 
     /**
@@ -259,11 +233,11 @@ public interface IBaseDao {
      * @return 实体对象集合
      * create chenxianguan 2015年12月3日下午8:20:20
      */
-    List queryObjectsBySql(Class clazz, String sql, Object... params);
+    List findBySql(Class clazz, String sql, Object... params);
 
-    List queryObjectsBySql(Class clazz, String sql, Map<String, Object> paramsMap);
+    List findBySql(Class clazz, String sql, Map<String, Object> paramsMap);
 
-    List queryObjectsBySql(Class clazz, String sql, Map<String, Object> paramsMap, Integer firstResult, Integer maxResults);
+    List findBySql(Class clazz, String sql, Map<String, Object> paramsMap, Integer firstResult, Integer maxResults);
 
 
 }
