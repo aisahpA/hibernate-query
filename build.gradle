@@ -1,0 +1,46 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+version = '0.1'
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'hibernate-query',
+                'Implementation-Version': version
+    }
+}
+
+repositories {
+    mavenCentral()
+    //使用开源中国的maven仓库
+    maven { url 'http://maven.oschina.net/content/groups/public/' }
+}
+
+dependencies {
+    //导入本地的依赖包
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //从maven仓库导入依赖
+
+    //apache
+    compile 'org.apache.httpcomponents:httpclient:4.5'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'commons-beanutils:commons-beanutils-core:1.8.3'
+    compile 'commons-collections:commons-collections:3.2.2'
+
+    //spring
+    compile 'org.springframework:spring-orm:4.2.5.RELEASE'
+
+    //hibernate
+    compile 'org.hibernate:hibernate-search-orm:5.3.0.Final'
+
+    testCompile ('junit:junit:4.+')
+}
+
+
+test {
+    systemProperties 'property': 'value'
+}
