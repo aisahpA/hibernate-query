@@ -14,6 +14,6 @@ public interface IDomainObject extends Serializable {
      *
      * @return 主键值
      */
-    Serializable getPrimaryKey();
+    //Serializable getPrimaryKey();
 }
 

@@ -179,19 +179,5 @@ public class Page<T> {
 		this.totalCount = totalCount;
 	}
 	
-	/**
-	 * 验证page对象，1、page为null会新建一个默认的
-	 * 
-	 * 
-	 * @param page
-	 * @return Page 检验后可用的page对象
-	 */
-	public static <T> Page<T> checkValid(Page<T> page) {
-		if (page == null){
-			return new Page<T>();
-		}
-		return page;
-	}
-	
 
 }

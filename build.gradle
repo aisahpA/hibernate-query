@@ -21,21 +21,30 @@ repositories {
 
 dependencies {
     //导入本地的依赖包
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    //compile fileTree(dir: 'libs', include: ['*.jar'])
 
     //从maven仓库导入依赖
+    // https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils-core
+    //compile group: 'commons-beanutils', name: 'commons-beanutils-core', version: '1.8.3'
 
-    //apache
-    compile 'org.apache.httpcomponents:httpclient:4.5'
-    compile 'org.apache.commons:commons-lang3:3.3.2'
-    compile 'commons-beanutils:commons-beanutils-core:1.8.3'
-    compile 'commons-collections:commons-collections:3.2.2'
+    // https://mvnrepository.com/artifact/commons-collections/commons-collections
+    //compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+
+    // https://mvnrepository.com/artifact/org.easymock/easymock
+    compile group: 'org.easymock', name: 'easymock', version: '3.4'
+
 
     //spring
-    compile 'org.springframework:spring-orm:4.2.5.RELEASE'
+    // https://mvnrepository.com/artifact/org.springframework/spring-orm
+    compile group: 'org.springframework', name: 'spring-orm', version: '4.3.1.RELEASE'
 
     //hibernate
-    compile 'org.hibernate:hibernate-search-orm:5.3.0.Final'
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-search-orm
+    compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.5.4.Final'
+
 
     testCompile ('junit:junit:4.+')
 }
