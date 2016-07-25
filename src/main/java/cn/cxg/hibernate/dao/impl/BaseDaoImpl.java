@@ -173,67 +173,6 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
     }
 
     //-------------------------------------------------------------------------
-    // Convenience finder methods for SQL strings
-    //-------------------------------------------------------------------------
-
-    @Override
-    public int executeUpdateBySql(String sql, Object... params) {
-        SQLQuery queryObject = this.currentSession().createSQLQuery(sql);
-        setParams(queryObject, params);
-        return queryObject.executeUpdate();
-    }
-
-    @Override
-    public int executeUpdateBySql(String sql, Map<String, Object> paramsMap) {
-        SQLQuery queryObject = this.currentSession().createSQLQuery(sql);
-        setParams(queryObject, paramsMap);
-        return queryObject.executeUpdate();
-    }
-
-    @Override
-    public <T> List<T> findBySql(String sql, Object... params) {
-        SQLQuery query = this.currentSession().createSQLQuery(sql);
-        this.setParams(query, params);
-        return query.list();
-    }
-
-    @Override
-    public <T> List<T> findBySql(String sql, Map<String, Object> paramsMap) {
-        return this.findBySql(sql, paramsMap, -1, -1);
-    }
-
-    @Override
-    public <T> List<T> findBySql(String sql, Map<String, Object> paramsMap, int firstResult, int maxResults) {
-        SQLQuery query = this.currentSession().createSQLQuery(sql);
-        this.setParams(query, paramsMap);
-        this.setFirstAndMaxResult(query, firstResult, maxResults);
-        return query.list();
-    }
-
-    @Override
-    public <T> List<T> findBySql(Class<T> clazz, String sql, Object... params) {
-        SQLQuery query = this.currentSession().createSQLQuery(sql);
-        query.addEntity(clazz);
-        this.setParams(query, params);
-        return query.list();
-    }
-
-    @Override
-    public <T> List<T> findBySql(Class<T> clazz, String sql, Map<String, Object> paramsMap) {
-        return this.findBySql(clazz, sql, paramsMap, -1, -1);
-    }
-
-    @Override
-    public <T> List<T> findBySql(Class<T> clazz, String sql, Map<String, Object> paramsMap, int firstResult, int maxResults) {
-        SQLQuery query = this.currentSession().createSQLQuery(sql);
-        query.addEntity(clazz);
-        this.setParams(query, paramsMap);
-        this.setFirstAndMaxResult(query, firstResult, maxResults);
-        return query.list();
-    }
-
-
-    //-------------------------------------------------------------------------
     // 公用方法
     //-------------------------------------------------------------------------
 
