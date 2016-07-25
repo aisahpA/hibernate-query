@@ -67,11 +67,6 @@ public class BaseServiceImpl implements IBaseService {
         return baseDao.findByHql(hqlString, paramsMap);
     }
 
-    @Override
-    public Page search(String hqlString, Map<String, Object> paramsMap, Page page) {
-        return baseDao.search(hqlString, paramsMap, page);
-    }
-
 
     @Override
     public int count(Query query) {

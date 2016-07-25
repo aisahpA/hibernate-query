@@ -102,16 +102,6 @@ public interface IBaseService {
      */
     <T> List<T> findByHql(String hqlString, Map<String, Object> paramsMap);
 
-    /**
-     * 根据hql分页查询
-     *
-     * @param hqlString The HQL query
-     * @param paramsMap 参数值的map
-     * @param page      分页信息
-     * @return 分页数据
-     */
-    Page search(String hqlString, Map<String, Object> paramsMap, Page page);
-
 
     //-------------------------------------------------------------------------
     // 使用Query进行操作

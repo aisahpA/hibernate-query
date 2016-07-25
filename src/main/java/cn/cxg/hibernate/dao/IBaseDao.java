@@ -45,7 +45,7 @@ public interface IBaseDao {
      * @param entity the persistent instance to re-read
      * @see org.hibernate.Session#refresh(Object)
      */
-    void refresh(Object entity);
+    void refresh(IDomainObject entity);
 
 
     //-------------------------------------------------------------------------
@@ -125,17 +125,7 @@ public interface IBaseDao {
      * @param maxResults  the maximum number of result objects to retrieve (or <=0 for no limit)
      * @return a {@link List} containing the results of the query execution
      */
-    <T> List<T> findByHql(String hqlString, Map<String, Object> paramsMap, Integer firstResult, Integer maxResults);
-
-    /**
-     * 根据hql分页查询
-     *
-     * @param hqlString The HQL query
-     * @param paramsMap 参数值的map
-     * @param page      分页信息
-     * @return 分页数据
-     */
-    Page search(String hqlString, Map<String, Object> paramsMap, Page page);
+    <T> List<T> findByHql(String hqlString, Map<String, Object> paramsMap, int firstResult, int maxResults);
 
 
     //-------------------------------------------------------------------------
@@ -211,33 +201,32 @@ public interface IBaseDao {
 
 
     /**
-     * 根据sql查询
+     * 根据sql查询，binding a number of values to "?" parameters
      *
      * @param sql sql查询语句
+     * @param params 按SQL中?值对应的各参数值
      * @return 查询结果
-     * create chenxianguan 2015年12月3日下午8:28:33
      */
-    List findBySql(String sql, Object... params);
+    <T> List<T> findBySql(String sql, Object... params);
 
-    List findBySql(String sql, Map<String, Object> paramsMap);
+    <T> List<T> findBySql(String sql, Map<String, Object> paramsMap);
 
-    List findBySql(String sql, Map<String, Object> paramsMap, Integer firstResult, Integer maxResults);
-
+    <T> List<T> findBySql(String sql, Map<String, Object> paramsMap, int firstResult, int maxResults);
 
     /**
-     * 根据sql查询，并组装为实体对象返回
+     * 根据sql查询，并组装为实体对象返回，binding a number of values to "?" parameters
      * <p>此方法好像只支持select * 查询
      *
      * @param clazz 返回的实体对象类型
      * @param sql   sql查询语句
+     * @param params 按SQL中?值对应的各参数值
      * @return 实体对象集合
-     * create chenxianguan 2015年12月3日下午8:20:20
      */
-    List findBySql(Class clazz, String sql, Object... params);
+    <T> List<T> findBySql(Class<T> clazz, String sql, Object... params);
 
-    List findBySql(Class clazz, String sql, Map<String, Object> paramsMap);
+    <T> List<T> findBySql(Class<T> clazz, String sql, Map<String, Object> paramsMap);
 
-    List findBySql(Class clazz, String sql, Map<String, Object> paramsMap, Integer firstResult, Integer maxResults);
+    <T> List<T> findBySql(Class<T> clazz, String sql, Map<String, Object> paramsMap, int firstResult, int maxResults);
 
 
 }
