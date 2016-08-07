@@ -1,0 +1,26 @@
+version '1.0-SNAPSHOT'
+
+
+dependencies {
+    compile project(':query-core')
+
+    // https://mvnrepository.com/artifact/org.springframework/spring-context
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.2.RELEASE'
+
+    // https://mvnrepository.com/artifact/org.springframework/spring-context-support
+    compile group: 'org.springframework', name: 'spring-context-support', version: '4.3.2.RELEASE'
+
+    // https://mvnrepository.com/artifact/org.springframework/spring-test
+    compile group: 'org.springframework', name: 'spring-test', version: '4.3.2.RELEASE'
+
+
+    //data
+    compile 'c3p0:c3p0:0.9.1.2'
+    compile 'mysql:mysql-connector-java:5.1.29'
+
+    // https://mvnrepository.com/artifact/org.easymock/easymock
+    compile group: 'org.easymock', name: 'easymock', version: '3.4'
+
+    compile ('junit:junit:4.+')
+
+}

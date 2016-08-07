@@ -1,55 +1,79 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'idea'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-version = '0.1'
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'hibernate-query',
-                'Implementation-Version': version
+buildscript {
+    repositories {
+        mavenCentral()
     }
 }
 
-repositories {
-    mavenCentral()
-    //使用开源中国的maven仓库
-    maven { url 'http://maven.oschina.net/content/groups/public/' }
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    task initProject << {
+        sourceSets*.java.srcDirs*.each { it.mkdirs() }
+        sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+    }
+
+
+    repositories {
+        mavenCentral()
+    }
+
+
+    dependencies {
+        //导入本地的依赖包
+        //compile fileTree(dir: 'libs', include: ['*.jar'])
+
+        //从maven仓库导入依赖
+        // https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils-core
+        compile group: 'commons-beanutils', name: 'commons-beanutils-core', version: '1.8.3'
+
+        // https://mvnrepository.com/artifact/commons-collections/commons-collections
+        //compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
+
+        // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+        compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+
+
+        //spring
+        // https://mvnrepository.com/artifact/org.springframework/spring-orm
+        compile group: 'org.springframework', name: 'spring-orm', version: '4.3.2.RELEASE'
+
+        //hibernate
+        // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+        compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.1.Final'
+
+    }
 }
 
-dependencies {
-    //导入本地的依赖包
-    //compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    //从maven仓库导入依赖
-    // https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils-core
-    //compile group: 'commons-beanutils', name: 'commons-beanutils-core', version: '1.8.3'
-
-    // https://mvnrepository.com/artifact/commons-collections/commons-collections
-    //compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
-
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
-
-    // https://mvnrepository.com/artifact/org.easymock/easymock
-    compile group: 'org.easymock', name: 'easymock', version: '3.4'
-
-
-    //spring
-    // https://mvnrepository.com/artifact/org.springframework/spring-orm
-    compile group: 'org.springframework', name: 'spring-orm', version: '4.3.1.RELEASE'
-
-    //hibernate
-    // https://mvnrepository.com/artifact/org.hibernate/hibernate-search-orm
-    compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.5.4.Final'
-
-
-    testCompile ('junit:junit:4.+')
+idea.project {
+    jdkName = '1.8'
+    languageLevel = '1.8'
+    ipr {
+        withXml { XmlProvider xml ->
+            xml.node.with {
+                // setup Git root
+                component.find { it.@name == 'VcsDirectoryMappings' }.replaceNode {
+                    component(name: 'VcsDirectoryMappings') {
+                        mapping(directory: "", vcs: "")
+                        mapping(directory: "\$PROJECT_DIR\$", vcs: 'Git')
+                    }
+                }
+                // enable 'Annotation Processors'
+                component.find { it.@name == 'CompilerConfiguration' }['annotationProcessing'][0].replaceNode {
+                    annotationProcessing {
+                        profile(default: true, name: 'Default', useClasspath: 'true', enabled: true)
+                    }
+                }
+            }
+        }
+    }
 }
 
-
-test {
-    systemProperties 'property': 'value'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }

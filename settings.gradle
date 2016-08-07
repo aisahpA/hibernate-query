@@ -1,0 +1,5 @@
+rootProject.name = 'cn.cxg.hibernate-query'
+
+include ':query-core'
+include ':query-test'
+
