@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author chenxianguan 2016/7/24
  */
-public interface IBaseService {
+public interface BaseService {
 
     //-------------------------------------------------------------------------
     // 使用实体进行操作

@@ -1,6 +1,5 @@
 package cn.cxg.hibernate.query;
 
-import cn.cxg.hibernate.domain.City;
 
 /**
  *
@@ -10,7 +9,7 @@ public class SimpleQueryTest {
 
 
     public void testConstro(){
-        SimpleQuery<City> query = new SimpleQuery<>();
+
 
 
 

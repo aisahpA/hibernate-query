@@ -1,10 +1,10 @@
 package cn.cxg.hibernate.service.impl;
 
-import cn.cxg.hibernate.dao.IBaseDao;
+import cn.cxg.hibernate.dao.BaseDao;
 import cn.cxg.hibernate.domain.IDomainObject;
 import cn.cxg.hibernate.query.Page;
 import cn.cxg.hibernate.query.Query;
-import cn.cxg.hibernate.service.IBaseService;
+import cn.cxg.hibernate.service.BaseService;
 import org.hibernate.HibernateException;
 
 import java.io.Serializable;
@@ -13,15 +13,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class BaseServiceImpl implements IBaseService {
+public class BaseServiceImpl implements BaseService {
 
-    private IBaseDao baseDao;
+    private BaseDao baseDao;
 
-    public IBaseDao getBaseDao() {
+    public BaseDao getBaseDao() {
         return baseDao;
     }
 
-    public void setBaseDao(IBaseDao baseDao) {
+    public void setBaseDao(BaseDao baseDao) {
         this.baseDao = baseDao;
     }
 

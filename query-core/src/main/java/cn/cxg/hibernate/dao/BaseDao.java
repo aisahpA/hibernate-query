@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author chenxianguan  2016/7/24
  */
-public interface IBaseDao {
+public interface BaseDao {
 
     //-------------------------------------------------------------------------
     // Convenience methods for loading individual objects

@@ -2,15 +2,105 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="
-        http://www.springframework.org/schema/beans
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context 
-        http://www.springframework.org/schema/context/spring-context.xsd">
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!-- 加载资源文件  其中包含变量信息-->
     <context:property-placeholder location="classpath:/db.properties"/>
 
-    <import resource="spring-jdbc.xml"/>
+
+    <!-- HSQLDB Data Source -->
+    <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+        <property name="url" value="jdbc:hsqldb:mem:test-db.sql" />
+        <property name="username" value="sa" />
+        <property name="password" value="" />
+        <property name="initialSize" value="5" />
+        <property name="maxActive" value="10" />
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxOpenPreparedStatements" value="10" />
+    </bean>-->
+
+    <!-- 数据库映射 -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!-- Hibernate Session Factory  -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan">
+            <list>
+                <value>cn.cxg.hibernate.domain</value>
+                <!--<value>cn.cxg.hibernate.domain.Address</value>
+                <value>cn.cxg.hibernate.domain.Category</value>
+                <value>cn.cxg.hibernate.domain.Customer</value>
+                <value>cn.cxg.hibernate.domain.Order</value>
+                <value>cn.cxg.hibernate.domain.OrderItem</value>
+                <value>cn.cxg.hibernate.domain.Product</value>-->
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <prop key="hibernate.connection.autocommit">${hibernate.connection.autocommit}</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <!-- 配置Hibernate事务管理器 -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- 配置事务异常封装 -->
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+    <!--  声明式容器事务管理 ,transaction-manager指定事务管理器为transactionManager -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*"/>
+            <tx:method name="add*"/>
+            <tx:method name="delete*"/>
+            <tx:method name="update*"/>
+            <tx:method name="*" propagation="NOT_SUPPORTED" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:aspectj-autoproxy expose-proxy="true"/>
+
+    <aop:config proxy-target-class="true" expose-proxy="true">
+        <aop:pointcut id="txPointcut" expression="execution(* cn.cxg.hibernate.service.impl.*.*(..))"/>
+        <aop:advisor pointcut-ref="txPointcut" advice-ref="txAdvice"/>
+    </aop:config>
+
+
+    <!-- baseDao -->
+    <bean id="baseDao" class="cn.cxg.hibernate.dao.impl.BaseDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+
+    <!-- baseService -->
+    <bean id="baseService" class="cn.cxg.hibernate.service.impl.BaseServiceImpl">
+        <property name="baseDao" ref="baseDao"/>
+    </bean>
 
 </beans>

@@ -1,6 +1,6 @@
 package cn.cxg.hibernate.dao.impl;
 
-import cn.cxg.hibernate.dao.IBaseDao;
+import cn.cxg.hibernate.dao.BaseDao;
 import cn.cxg.hibernate.domain.IDomainObject;
 import cn.cxg.hibernate.query.NamedParam;
 import cn.cxg.hibernate.query.Page;
@@ -21,7 +21,7 @@ import java.util.*;
  *
  * @author chenxianguan  2015年12月3日
  */
-public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
+public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
 
     //-------------------------------------------------------------------------
     // Convenience methods for loading individual objects
@@ -170,7 +170,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
      * @param firstResult 起始值
      * @param maxResults 每页最大值
      */
-    protected void setFirstAndMaxResult(org.hibernate.Query query, int firstResult, int maxResults) {
+    protected void setFirstAndMaxResult(org.hibernate.query.Query query, int firstResult, int maxResults) {
         if (firstResult >= 0) {
             query.setFirstResult(firstResult);
         }
@@ -185,7 +185,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
      * @param query  org.hibernate.Query
      * @param params 待设置的参数
      */
-    protected void setParams(org.hibernate.Query query, Object... params) {
+    protected void setParams(org.hibernate.query.Query query, Object... params) {
         if (params != null) {
             for (int i = 0; i < params.length; i++) {
                 query.setParameter(i, params[i]);
@@ -199,7 +199,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements IBaseDao {
      * @param query     org.hibernate.Query
      * @param paramsMap 待设置的参数对
      */
-    protected void setParams(org.hibernate.Query query, Map<String, Object> paramsMap) {
+    protected void setParams(org.hibernate.query.Query query, Map<String, Object> paramsMap) {
         if (paramsMap == null || paramsMap.isEmpty()) {
             return;
         }
