@@ -2,7 +2,9 @@ package cn.cxg.hibernate.service.impl;
 
 import cn.cxg.hibernate.BaseTestCase;
 import cn.cxg.hibernate.domain.Customer;
+import cn.cxg.hibernate.domain.Order;
 import cn.cxg.hibernate.query.Query;
+import cn.cxg.hibernate.query.WebQueryCriteria;
 import org.apache.log4j.Logger;
 import org.junit.*;
 
@@ -104,6 +106,37 @@ public class BaseServiceImplTest extends BaseTestCase {
         Query query = new Query(Customer.class);
         int total = baseService.count(query);
         Assert.assertEquals(0, total);
+    }
+
+    @Test
+    public void testQueryList(){
+        Query query = new Query(Order.class);
+        query.addCondition("customer.firstName", WebQueryCriteria.joint_eq, "Steven");
+        int total = baseService.count(query);
+        Assert.assertEquals(1, total);
+
+    }
+
+    @Test
+    public void testGet(){
+        Order order = baseService.get(Order.class, 1L);
+        Assert.assertNotNull(order);
+    }
+
+    @Test
+    public void testUpdate(){
+        Order order = baseService.get(Order.class, 1L);
+        order.setTax(0.5);
+        baseService.update(order);
+        Assert.assertEquals(0.5, order.getTax(), 0.000001);
+    }
+
+    @Test
+    public void testDelete(){
+        Order order = baseService.get(Order.class, 1L);
+        Assert.assertNotNull(order);
+
+        baseService.delete(order);
     }
 
 }

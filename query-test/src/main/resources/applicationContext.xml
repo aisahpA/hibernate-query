@@ -103,4 +103,9 @@
         <property name="baseDao" ref="baseDao"/>
     </bean>
 
+    <!-- baseService -->
+    <bean id="initService" class="cn.cxg.hibernate.service.impl.BaseInitServiceImpl">
+        <property name="baseDao" ref="baseDao"/>
+    </bean>
+
 </beans>

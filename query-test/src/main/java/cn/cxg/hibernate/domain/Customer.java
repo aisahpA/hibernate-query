@@ -2,8 +2,11 @@ package cn.cxg.hibernate.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ * 顾客
  *
  * @author chenxianguan on 2016/8/7.
  */
@@ -18,6 +21,9 @@ public class Customer extends DomainObject{
     private String lastName;
     private String email;
     private String password;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "customer")
+    private List<Address> addresses = new ArrayList<>();
 
     public Customer() {
     }
@@ -67,6 +73,14 @@ public class Customer extends DomainObject{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 
     @Override

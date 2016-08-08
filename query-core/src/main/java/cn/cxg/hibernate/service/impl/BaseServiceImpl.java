@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class BaseServiceImpl implements BaseService {
 
-    private BaseDao baseDao;
+    protected BaseDao baseDao;
 
     public BaseDao getBaseDao() {
         return baseDao;
