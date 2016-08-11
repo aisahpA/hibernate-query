@@ -6,7 +6,8 @@ import cn.cxg.hibernate.domain.Order;
 import cn.cxg.hibernate.query.Query;
 import cn.cxg.hibernate.query.WebQueryCriteria;
 import org.apache.log4j.Logger;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.List;
 
@@ -54,7 +55,6 @@ public class BaseServiceImplTest extends BaseTestCase {
 
         // Assert that the customer is no longer in the database
         Customer customer3 = baseService.get(Customer.class, customer.getId() );
-        logger.info( "===========================Customer3: " + customer3 );
         Assert.assertNull( "The customer should have been deleted but it was not", customer3 );
     }
 
@@ -65,10 +65,10 @@ public class BaseServiceImplTest extends BaseTestCase {
     public void testQueryByLastName()
     {
         // Create four customers
-        Customer steve = new Customer( "Steven", "Haines", "steve@gomash.com", "mypass" );
-        Customer linda = new Customer( "Linda", "Haines", "linda@gomash.com", "mypass" );
-        Customer michael = new Customer( "Michael", "Haines", "michael@gomash.com", "mypass" );
-        Customer someone = new Customer( "Someone", "Else", "someone@somewhere.com", "notmypass" );
+        Customer steve = new Customer( "Steven2", "Haines2", "steve@gomash.com", "mypass" );
+        Customer linda = new Customer( "Linda2", "Haines2", "linda@gomash.com", "mypass" );
+        Customer michael = new Customer( "Michael2", "Haines2", "michael@gomash.com", "mypass" );
+        Customer someone = new Customer( "Someone2", "Else2", "someone@somewhere.com", "notmypass" );
 
         // Add the four customers to the database
         baseService.save( steve );
@@ -77,7 +77,7 @@ public class BaseServiceImplTest extends BaseTestCase {
         baseService.save( someone );
 
         // Query the database
-        List<Customer> customers = baseService.findByJPA("from Customer where lastName=?1", "Haines" );
+        List<Customer> customers = baseService.findByJPA("from Customer where lastName=?1", "Haines2" );
 
         // Assert that we found all of the records that we expected to find
         Assert.assertEquals( "Did not find the three customers we inserted into the database", 3,
@@ -86,7 +86,7 @@ public class BaseServiceImplTest extends BaseTestCase {
         // Debug
         if( logger.isDebugEnabled() )
         {
-            logger.debug( "All customers with a lastname of Haines:" );
+            logger.debug( "All customers with a lastname of Haines2:" );
             for( Customer customer : customers )
             {
                 logger.debug( "Customer: " + customer );
@@ -105,7 +105,7 @@ public class BaseServiceImplTest extends BaseTestCase {
     public void testQueryCount(){
         Query query = new Query(Customer.class);
         int total = baseService.count(query);
-        Assert.assertEquals(0, total);
+        Assert.assertEquals(4, total);
     }
 
     @Test

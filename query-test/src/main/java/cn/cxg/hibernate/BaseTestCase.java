@@ -1,51 +1,36 @@
 package cn.cxg.hibernate;
 
-import cn.cxg.hibernate.domain.*;
 import cn.cxg.hibernate.service.BaseService;
 import cn.cxg.hibernate.service.impl.BaseInitServiceImpl;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 /**
  * 测试基础
+ * <br/>当初始化插入数据回滚事务的时候，需要先将@Transactional注释掉，然后运行一个测试方法，最后再取消注释
  *
  * @author chenxianguan on 2016/8/7.
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"classpath:applicationContext.xml"})
+@Transactional
 public class BaseTestCase {
 
-    /**
-     * A Spring application applicationContext that we'll create from a test application applicationContext and use to create
-     * our DAO object (and data source, session factory, etc.)
-     */
-    private static ApplicationContext applicationContext = null;
-
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
-    /**
-     * The BaseService that we'll be testing
-     */
+    @Resource(name = "baseService")
     protected BaseService baseService;
+
+    @Resource(name = "initService")
     private BaseInitServiceImpl initService;
 
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-
-        // Load the applicationContext.xml file
-        applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
-    }
-
     @Before
     public void setUp() {
-        baseService = (BaseService) applicationContext.getBean("baseService");
-
-        initService = (BaseInitServiceImpl)applicationContext.getBean("initService");
-
         //初始化数据
         initService.saveInit();
     }
@@ -53,8 +38,7 @@ public class BaseTestCase {
 
     @After
     public void tearDown() {
-        initService.deleteClear();
-        baseService = null;
+
     }
 
 

@@ -1,6 +1,7 @@
 package cn.cxg.hibernate.service.impl;
 
 import cn.cxg.hibernate.domain.*;
+import org.springframework.test.annotation.Rollback;
 
 /**
  *
@@ -9,7 +10,16 @@ import cn.cxg.hibernate.domain.*;
 public class BaseInitServiceImpl extends BaseServiceImpl{
 
 
+    /**
+     * 初始化测试使用的数据
+     */
+    @Rollback(value = false)
     public void saveInit(){
+        Long total = baseDao.findSingleByJPA("select count(1) from Customer");
+        if (total > 0){
+            return;
+        }
+
         // Create four customers
         Customer steve = new Customer( "Steven", "Haines", "steve@gomash.com", "mypass" );
         Customer linda = new Customer( "Linda", "Haines", "linda@gomash.com", "mypass" );

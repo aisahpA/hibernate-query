@@ -61,11 +61,11 @@ public class NamedParam {
 
 
     public String[] getParamNamesArr() {
-        return paramNames.isEmpty() ? null : paramNames.toArray(new String[paramNames.size()]);
+        return paramNames.isEmpty() ? new String[0] : paramNames.toArray(new String[paramNames.size()]);
     }
 
     public Object[] getValuesArr() {
-        return values.isEmpty() ? null : values.toArray(new Object[values.size()]);
+        return values.isEmpty() ? new Object[0] : values.toArray(new Object[values.size()]);
     }
 
 }
