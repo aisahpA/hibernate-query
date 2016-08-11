@@ -141,12 +141,12 @@ public interface BaseService {
     /**
      * 同bulkUpdate方法，只是它有事务
      * Update/delete all objects according to the given query, binding a number of
-     * values to "?" parameters in the query string.
+     * values to "?1" parameters in the query string.
      *
-     * @param hqlString an update/delete query expressed in Hibernate's query language
+     * @param hqlString an update/delete query expressed in Hibernate's query language, ?num based from 1
      * @param values    the values of the parameters
      * @return 更新或删除的记录数量
      */
-    int updateBulk(String hqlString, Object... values);
+    int updateBulkByJPA(String hqlString, Object... values);
 
 }

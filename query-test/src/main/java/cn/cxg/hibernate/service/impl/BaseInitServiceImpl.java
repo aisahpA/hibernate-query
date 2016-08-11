@@ -61,12 +61,12 @@ public class BaseInitServiceImpl extends BaseServiceImpl{
     }
 
     public void deleteClear(){
-        baseDao.bulkUpdate("delete from OrderItem");
-        baseDao.bulkUpdate("delete from Order");
-        baseDao.bulkUpdate("delete from Address");
-        baseDao.bulkUpdate("delete from ProductCategory");
-        baseDao.bulkUpdate("delete from Category");
-        baseDao.bulkUpdate("delete from Product");
-        baseDao.bulkUpdate("delete from Customer");
+        baseDao.bulkUpdateByJPA("delete from OrderItem");
+        baseDao.bulkUpdateByJPA("delete from Order");
+        baseDao.bulkUpdateByJPA("delete from Address");
+        baseDao.bulkUpdateByJPA("delete from ProductCategory");
+        baseDao.bulkUpdateByJPA("delete from Category");
+        baseDao.bulkUpdateByJPA("delete from Product");
+        baseDao.bulkUpdateByJPA("delete from Customer");
     }
 }

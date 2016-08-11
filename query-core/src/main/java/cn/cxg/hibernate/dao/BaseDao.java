@@ -175,12 +175,12 @@ public interface BaseDao {
 
     /**
      * Update/delete all objects according to the given query, binding a number of
-     * values to "?" parameters in the query string.
+     * values to "?1" parameters in the query string.
      *
-     * @param queryString an update/delete query expressed in Hibernate's query language
+     * @param queryString an update/delete query expressed in Hibernate's query language, ?num based from 1
      * @param values      the values of the parameters
      * @return the number of instances updated/deleted
      */
-    int bulkUpdate(String queryString, Object... values);
+    int bulkUpdateByJPA(String queryString, Object... values);
 
 }

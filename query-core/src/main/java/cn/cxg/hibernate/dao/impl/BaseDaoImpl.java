@@ -156,8 +156,10 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
     // Convenience query methods for iteration and bulk updates/deletes
     //-------------------------------------------------------------------------
     @Override
-    public int bulkUpdate(String queryString, Object... values) {
-        return getHibernateTemplate().bulkUpdate(queryString, values);
+    public int bulkUpdateByJPA(String queryString, Object... values) {
+        org.hibernate.query.Query query = this.currentSession().createQuery(queryString);
+        this.setParamsJPA(query, values);
+        return query.executeUpdate();
     }
 
     //-------------------------------------------------------------------------
@@ -215,6 +217,20 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao {
                 query.setParameterList(key, (Object[]) value);
             } else {
                 query.setParameter(key, value);
+            }
+        }
+    }
+
+    /**
+     * 设置Query的参数，?1,?2的格式
+     *
+     * @param query  org.hibernate.Query
+     * @param params 待设置的参数
+     */
+    protected void setParamsJPA(org.hibernate.query.Query query, Object... params) {
+        if (params != null) {
+            for (int i = 0; i < params.length; i++) {
+                query.setParameter(String.valueOf(i+1), params[i]);
             }
         }
     }

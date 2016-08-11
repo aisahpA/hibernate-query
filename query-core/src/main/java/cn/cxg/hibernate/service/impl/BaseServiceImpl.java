@@ -89,8 +89,8 @@ public class BaseServiceImpl implements BaseService {
 
 
     @Override
-    public int updateBulk(String queryString, Object... values) {
-        return baseDao.bulkUpdate(queryString, values);
+    public int updateBulkByJPA(String queryString, Object... values) {
+        return baseDao.bulkUpdateByJPA(queryString, values);
     }
 
 }
