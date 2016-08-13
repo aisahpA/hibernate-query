@@ -26,26 +26,6 @@ allprojects {
     dependencies {
         //导入本地的依赖包
         //compile fileTree(dir: 'libs', include: ['*.jar'])
-
-        //从maven仓库导入依赖
-        // https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils-core
-        compile group: 'commons-beanutils', name: 'commons-beanutils-core', version: '1.8.3'
-
-        // https://mvnrepository.com/artifact/commons-collections/commons-collections
-        //compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
-
-        // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-        compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
-
-
-        //spring
-        // https://mvnrepository.com/artifact/org.springframework/spring-orm
-        compile group: 'org.springframework', name: 'spring-orm', version: '4.3.2.RELEASE'
-
-        //hibernate
-        // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
-        compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.1.Final'
-
     }
 }
 

@@ -273,37 +273,30 @@ public class WebQueryCriteria implements Serializable {
 	 * is empty
 	 */
 	public static final int joint_isEmpty = 15;
-	
 	/**
 	 * is not empty
 	 */
 	public static final int joint_isNotEmpty = 16;
-	
 	/**
 	 * sizeEq
 	 */
 	public static final int joint_sizeEq = 17;
-	
 	/**
 	 * sizeNe
 	 */
 	public static final int joint_sizeNe = 18;
-	
 	/**
 	 * sizeGt
 	 */
 	public static final int joint_sizeGt = 19;
-	
 	/**
 	 * sizeLt
 	 */
 	public static final int joint_sizeLt = 20;
-	
 	/**
 	 * sizeGe
 	 */
 	public static final int joint_sizeGe = 21;
-	
 	/**
 	 * sizeLe
 	 */

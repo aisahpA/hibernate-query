@@ -23,7 +23,7 @@ public class Query {
     /**
      * 条件对象集合
      */
-    private List<WebQueryCriteria> querys;
+    private List<WebQueryCriteria> querys = new ArrayList<>();
     /**
      * 排序对象集合
      */
@@ -50,7 +50,6 @@ public class Query {
         return this;
     }
 
-
     /**
      * 添加关联方式
      *
@@ -71,11 +70,12 @@ public class Query {
      * @param fieldName 字段属性
      * @param mode      及时获取还是懒加载
      */
-    public void addFetchMode(String fieldName, FetchMode mode) {
+    public Query addFetchMode(String fieldName, FetchMode mode) {
         if (null == this.fetch) {
             this.fetch = new Fetch();
         }
         this.fetch.getFetchModes().put(fieldName, mode);
+        return this;
     }
 
     /**
@@ -83,11 +83,12 @@ public class Query {
      *
      * @param condition 查询条件
      */
-    public void addCondition(WebQueryCriteria condition) {
+    public Query addCondition(WebQueryCriteria condition) {
         if (null == querys) {
             this.querys = new ArrayList<>();
         }
         this.querys.add(condition);
+        return this;
     }
 
     /**
@@ -97,8 +98,9 @@ public class Query {
      * @param fieldName 查询条件字段名
      * @param whereType 查询条件类型
      */
-    public void addCondition(String fieldName, Integer whereType) {
+    public Query addCondition(String fieldName, Integer whereType) {
         this.addCondition(new WebQueryCriteria(fieldName, whereType));
+        return this;
     }
 
     /**
@@ -108,8 +110,9 @@ public class Query {
      * @param compare    查询条件类型{@link WebQueryCriteria}
      * @param fieldValue 查询条件值
      */
-    public void addCondition(String fieldName, Integer compare, Object fieldValue) {
+    public Query addCondition(String fieldName, Integer compare, Object fieldValue) {
         this.addCondition(new WebQueryCriteria(fieldName, compare, fieldValue));
+        return this;
     }
 
     /**
@@ -122,8 +125,9 @@ public class Query {
      * @param compare     查询条件类型{@link WebQueryCriteria}}
      * @param fieldValues 查询条件范围值
      */
-    public void addCondition(String fieldName, Integer compare, Object[] fieldValues) {
+    public Query addCondition(String fieldName, Integer compare, Object[] fieldValues) {
         this.addCondition(new WebQueryCriteria(fieldName, compare, fieldValues));
+        return this;
     }
 
     /**
@@ -136,8 +140,9 @@ public class Query {
      * @param compare     查询条件类型{@link WebQueryCriteria}}
      * @param fieldValues 查询条件范围值
      */
-    public void addCondition(String fieldName, Integer compare, Collection fieldValues) {
+    public Query addCondition(String fieldName, Integer compare, Collection fieldValues) {
         this.addCondition(new WebQueryCriteria(fieldName, compare, fieldValues));
+        return this;
     }
 
     /**
@@ -151,8 +156,9 @@ public class Query {
      * @param fieldValue1 查询条件起点值
      * @param fieldValue2 查询条件终点值
      */
-    public void addCondition(String fieldName, Integer compare, Object fieldValue1, Object fieldValue2) {
+    public Query addCondition(String fieldName, Integer compare, Object fieldValue1, Object fieldValue2) {
         this.addCondition(new WebQueryCriteria(fieldName, compare, fieldValue1, fieldValue2));
+        return this;
     }
 
     /**
@@ -165,10 +171,10 @@ public class Query {
      * @param junctionType 这几个字段对like的连接方式
      * @since create chenxianguan 2016年2月3日 下午1:43:53
      */
-    public void addLikeCondition(String[] fieldNames, String likeValue, Nature junctionType) {
+    public Query addLikeCondition(String[] fieldNames, String likeValue, Nature junctionType) {
 
         if (likeValue == null || "".equals(likeValue)) {
-            return;
+            return this;
         }
 
         List<WebQueryCriteria> likeQuerys = new ArrayList<>();
@@ -177,6 +183,7 @@ public class Query {
         }
 
         this.addCondition(new WebQueryCriteria(likeQuerys, junctionType));
+        return this;
     }
 
     /**
@@ -190,9 +197,10 @@ public class Query {
      * @see #addLikeCondition(String[], String, Nature)
      * @since create chenxianguan 2016年2月3日 下午1:43:53
      */
-    public void addLikeCondition(String[] fieldNames, String likeValue) {
+    public Query addLikeCondition(String[] fieldNames, String likeValue) {
 
         this.addLikeCondition(fieldNames, likeValue, Nature.OR);
+        return this;
     }
 
     /**
@@ -202,11 +210,12 @@ public class Query {
      * @param fieldName 排序字段名
      * @param direct    ASC or DESC
      */
-    public void addOrder(String fieldName, String direct) {
+    public Query addOrder(String fieldName, String direct) {
         if (null == this.orders) {
             this.orders = new LinkedHashMap<>();
         }
         this.orders.put(fieldName, direct);
+        return this;
     }
 
     public Class<?> getDomainClass() {

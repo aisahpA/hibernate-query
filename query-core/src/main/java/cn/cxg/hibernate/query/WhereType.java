@@ -37,16 +37,16 @@ public enum WhereType {
 	sizeGt(26),
 	sizeLt(27),
 	sizeGe(28),
-	sizeLe(29),
+	sizeLe(29)
 	;
 
 	private int type;
 	
-	private WhereType(int type){
+	WhereType(int type){
 		this.type = type;
 	}
 	
-	public int getValue(){
+	public int getType(){
 		return type;
 	}
 }

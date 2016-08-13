@@ -7,35 +7,22 @@ import java.util.Collection;
  *
  * @author chenxianguan on 2016/7/25.
  */
-public class SimpleQuery<T> {
+public class SimpleQuery {
 
     private Query query;
 
-    private T domain;
 
     /**
      * 构建查询对象
      *
      */
-    public SimpleQuery() {
-        query = new Query(domain.getClass());
+    public SimpleQuery(Class domainClass) {
+        query = new Query(domainClass);
     }
 
-
-    public T getDomain(){
-        if (domain != null) {
-            return domain;
-        }
-        //生成一个代理对象，实现调用T的方法的时候
-
-
-        return null;
+    public Query getQuery(){
+        return query;
     }
-
-
-
-
-
 
 
 
